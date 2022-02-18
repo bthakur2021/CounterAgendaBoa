@@ -1,92 +1,38 @@
-import 'package:counter_agenda_boa/CounterTwoScreen.dart';
-import 'package:counter_agenda_boa/CounterthreeScreen.dart';
-import 'package:counter_agenda_boa/Model/CounterModel.dart';
-import 'package:counter_agenda_boa/Provider/counterProvider.dart';
 import 'package:flutter/material.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import 'CounterOneScreen.dart';
+class CounterthreeScreen extends StatefulWidget {
+  CounterthreeScreen ({Key? key}) : super(key: key);
 
-void main() {
-  runApp(
-    const ProviderScope(child: MyApp()),
-  );
+  @override
+  _CounterthreeScreenState createState() => _CounterthreeScreenState();
 }
 
-
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+class _CounterthreeScreenState extends State<CounterthreeScreen > {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
 
-      home: MyNavigationBar (),
+        children: [
+          const Text("Counter Value will be here : ",style: TextStyle(fontSize: 10),),
+          const SizedBox(height: 20.0),
+          ElevatedButton.icon(
+            onPressed: () {
+
+              // Respond to button press
+            },
+            icon: const Icon(Icons.add, size: 18),
+            label: const Text("Increment me !"),
+          )
+        ],
+      ),
     );
   }
 }
 
-class MyNavigationBar extends StatefulWidget {
-  MyNavigationBar ({Key? key}) : super(key: key);
-
-  @override
-  _MyNavigationBarState createState() => _MyNavigationBarState();
-}
-
-class _MyNavigationBarState extends State<MyNavigationBar > {
-  final provider = StateNotifierProvider<CounterNotifier, CounterModel>(
-        (ref) => CounterNotifier(),
-  );
-  int _selectedIndex = 0;
-  int selectedPage = 0;
-
-  final _pageOptions = [
-    CounterOneScreen(),
-    CounterTwoScreen(),
-    CounterthreeScreen()
-  ];
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
-
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-          title: const Text('Counter Agenda Boa'),
-          backgroundColor: Colors.pink
-      ),
-      body: _pageOptions[_selectedIndex],
-
-      bottomNavigationBar: BottomNavigationBar(
-          items: const <BottomNavigationBarItem>[
-            BottomNavigationBarItem(
-                icon: Icon(Icons.countertops),
-                title: Text('Counter 1'),
-                backgroundColor: Colors.pink
-            ),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.countertops_outlined),
-                title: Text('Counter 2'),
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.countertops_rounded),
-              title: Text('Counter 3'),
-            ),
-          ],
-          type: BottomNavigationBarType.shifting,
-          currentIndex: _selectedIndex,
-          selectedItemColor: Colors.white,
-          iconSize: 40,
-          onTap: _onItemTapped,
-          elevation: 5
-      ),
-    );
-  }
+class HomeScreen {
 }
 
 class MyHomePage extends StatefulWidget {
