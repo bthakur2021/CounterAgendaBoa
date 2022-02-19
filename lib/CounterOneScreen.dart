@@ -1,23 +1,31 @@
-import 'package:counter_agenda_boa/Provider/counterProvider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:counter_agenda_boa/FirebaseServices/firebase.dart';
+import 'package:counter_agenda_boa/Provider/counterProviderOne.dart';
+import 'package:counter_agenda_boa/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class CounterOneScreen extends HookWidget {
-  CounterOneScreen ({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final provider = useProvider(CounterNotifier());
+    final counterModel = useProvider(provider);
+    int counterValue = counterModel.count;
     return Center(
 
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Text("Counter Value will be here : ",style: TextStyle(fontSize: 10),),
+          Text("Counter Value is here : $counterValue ",style: TextStyle(fontSize: 16),),
+          Text("Firebase Counter Value is here : ${FirebaseServices.updatedValue} ",style: TextStyle(fontSize: 16),),
+
           const SizedBox(height: 20.0),
           ElevatedButton.icon(
             onPressed: () {
-
+              context.read(provider.notifier).increment();
+              FirebaseServices.updateCounter1(counterValue);
+              FirebaseServices.getData();
               // Respond to button press
             },
             icon: const Icon(Icons.add, size: 18),
@@ -27,10 +35,5 @@ class CounterOneScreen extends HookWidget {
       ),
     );
   }
-}
-
-class _CounterOneScreenState extends State<CounterOneScreen > {
-
-  @override
 }
 
