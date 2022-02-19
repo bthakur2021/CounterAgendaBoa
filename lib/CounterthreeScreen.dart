@@ -26,7 +26,7 @@ class CounterthreeScreen extends HookWidget {
           ElevatedButton.icon(
             onPressed: () {
               context.read(provider3.notifier).increment();
-              FirebaseServices.updateCounter3(counterValue);
+              FirebaseServices.updateCounter3(counterValue+1);
               // Respond to button press
             },
             icon: const Icon(Icons.add, size: 18),

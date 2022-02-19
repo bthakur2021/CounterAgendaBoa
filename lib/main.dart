@@ -65,7 +65,12 @@ class _MyNavigationBarState extends State<MyNavigationBar > {
     });
   }
 
-
+@override
+void initState() {
+    // TODO: implement initState
+    super.initState();
+    FirebaseServices.getData();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(

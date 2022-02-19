@@ -24,7 +24,7 @@ class CounterOneScreen extends HookWidget {
           ElevatedButton.icon(
             onPressed: () {
               context.read(provider.notifier).increment();
-              FirebaseServices.updateCounter1(counterValue);
+              FirebaseServices.updateCounter1(counterValue+1);
               FirebaseServices.getData();
               // Respond to button press
             },
