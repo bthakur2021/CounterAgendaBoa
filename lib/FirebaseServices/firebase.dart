@@ -1,63 +1,40 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:counter_agenda_boa/AppEnum/app_enums.dart';
 
 class FirebaseServices {
-  static var database = FirebaseFirestore.instance;
-  static var databaseCollectionOne = FirebaseFirestore.instance.collection('CounterOne');
-  static var databaseCollectionTwo = FirebaseFirestore.instance.collection('CounterTwo');
-  static var databaseCollectionThree = FirebaseFirestore.instance.collection('CounterThree');
-  static int updatedValue = 0;
-  static Future<void> updateCounter1(int updatedValue) {
-    // Call the user's CollectionReference to add a new user
-    return databaseCollectionOne.doc("counter1").update({'counter1': updatedValue})
-    /* users
-          .add({
-        'counter1': counterModel.count.toString(), // John Doe
-        // 42
-      })*/
-        .then((value) => print("Counter1 Updated"))
-        .catchError((error) => print("Failed to add Counter1: $error"));
-  }
-  static Future<void> updateCounter2(int updatedValue) {
-    // Call the user's CollectionReference to add a new user
-    return databaseCollectionTwo.doc("counter2").update({'counter2': updatedValue})
-    /* users
-          .add({
-        'counter1': counterModel.count.toString(), // John Doe
-        // 42
-      })*/
-        .then((value) => print("Counter2 Updated"))
-        .catchError((error) => print("Failed to add Counter2: $error"));
-  }
-  static Future<void> updateCounter3(int updatedValue) {
-    // Call the user's CollectionReference to add a new user
-    return databaseCollectionThree.doc("Counter3").update({'counter3': updatedValue})
-    /* users
-          .add({
-        'counter1': counterModel.count.toString(), // John Doe
-        // 42
-      })*/
-        .then((value) => print("Counter3 Updated"))
-        .catchError((error) => print("Failed to add Counter3: $error"));
+  final CounterType _counterType;
+  late final CollectionReference _collectionReference;
+  late final DocumentReference _documentReference;
+
+  FirebaseServices(this._counterType) {
+    _collectionReference = FirebaseFirestore.instance.collection(_counterType.firebaseCollection);
+    _documentReference = _collectionReference.doc(_counterType.firebaseDoc);
   }
 
-  static refreshAllCounter(int updatedValue) {
-    print("value refreshed");
-    // Call the user's CollectionReference to add a new user
-    updateCounter1(0);
-    updateCounter2(0);
-    updateCounter3(0);
-
+  Future<int> updateCounter(int updatedValue) async {
+    await _documentReference.update({_counterType.firebaseField(): updatedValue});
+    return await getCounterValue();
   }
 
-  static void getData() async
-  {
-    DocumentSnapshot? documentSnapshot;
+  Future<int> getCounterValue() async {
+    var document = await _documentReference.get();
+    return document[_counterType.firebaseField()];
+  }
+}
 
-    await databaseCollectionOne.doc("counter1").get().then((value)
-    {
-    documentSnapshot = value;
-    });
-    updatedValue = documentSnapshot?['counter1'];
-    print("counter value is $updatedValue");
+extension on CounterType {
+  String get firebaseCollection => 'CounterCollection';
+
+  String get firebaseDoc => 'counterDoc';
+
+  String firebaseField() {
+    switch (this) {
+      case CounterType.counter1:
+        return 'counter1';
+      case CounterType.counter2:
+        return 'counter2';
+      case CounterType.counter3:
+        return 'counter3';
+    }
   }
 }

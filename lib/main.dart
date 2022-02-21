@@ -1,33 +1,20 @@
-import 'package:counter_agenda_boa/counter_two_screen.dart';
 import 'package:counter_agenda_boa/counter_three_screen.dart';
-import 'package:counter_agenda_boa/FirebaseServices/firebase.dart';
-import 'package:counter_agenda_boa/Model/CounterModel.dart';
-import 'package:counter_agenda_boa/Provider/counterProviderOne.dart';
-import 'package:counter_agenda_boa/Provider/counterProviderThree.dart';
+import 'package:counter_agenda_boa/counter_two_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import 'Provider/provider_utils.dart';
 import 'counter_one_screen.dart';
-import 'Provider/counterProviderTwo.dart';
 
-void main() async{
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+
   runApp(
     const ProviderScope(child: MyApp()),
   );
 }
-
-final provider = StateNotifierProvider<CounterNotifierOne, CounterModel>(
-      (ref) => CounterNotifierOne(),
-);
-final provider2 = StateNotifierProvider<CounterNotifierTwo, CounterModel>(
-      (ref) => CounterNotifierTwo(),
-);
-final provider3 = StateNotifierProvider<CounterNotifierThree, CounterModel>(
-      (ref) => CounterNotifierThree(),
-);
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -36,84 +23,58 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: MyNavigationBar(),
+      home: HomeScreen(),
     );
   }
 }
 
-class MyNavigationBar extends StatefulWidget {
-  const MyNavigationBar ({Key? key}) : super(key: key);
+class HomeScreen extends StatefulHookConsumerWidget {
+  const HomeScreen({Key? key}) : super(key: key);
 
   @override
-  _MyNavigationBarState createState() => _MyNavigationBarState();
+  _HomeScreenState createState() => _HomeScreenState();
 }
 
-class _MyNavigationBarState extends State<MyNavigationBar > {
-
+class _HomeScreenState extends ConsumerState<HomeScreen> {
   int _selectedIndex = 0;
-  int selectedPage = 0;
 
-  final _pageOptions = [
-    const CounterOneScreen(),
-    const CounterTwoScreen(),
-    const CounterThreeScreen()
-  ];
+  final _pageOptions = [const CounterOneScreen(), const CounterTwoScreen(), const CounterThreeScreen()];
+
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
   }
 
-@override
-void initState() {
-    // TODO: implement initState
-    super.initState();
-    FirebaseServices.getData();
-  }
   @override
   Widget build(BuildContext context) {
+    var _allCounterProvider = ref.watch(providerCounterAll);
+
     return Scaffold(
       appBar: AppBar(
-          title: const Text('Counter Agenda Boa'),
-          backgroundColor: Colors.black
+        title: Text('Counter ${_selectedIndex + 1}'),
+        backgroundColor: Colors.black,
+        actions: [
+          IconButton(
+              onPressed: () {
+                _allCounterProvider.reset();
+              },
+              icon: const Icon(Icons.clear)),
+        ],
       ),
       body: _pageOptions[_selectedIndex],
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.black,
-        onPressed: (){
-        FirebaseServices.refreshAllCounter(0);
-        context.read(provider.notifier).refresh();
-        context.read(provider2.notifier).refresh();
-        context.read(provider3.notifier).refresh();
-
-        },
-        tooltip: 'Increment',
-        child: const Icon(Icons.delete_forever),
-      ),
       bottomNavigationBar: BottomNavigationBar(
           items: const <BottomNavigationBarItem>[
-            BottomNavigationBarItem(
-                icon: Icon(Icons.countertops),
-                title: Text('Counter 1'),
-                backgroundColor: Colors.black
-            ),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.countertops_outlined),
-                title: Text('Counter 2'),
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.countertops_rounded),
-              title: Text('Counter 3'),
-            ),
+            BottomNavigationBarItem(icon: Icon(Icons.one_k), label: 'Counter 1', backgroundColor: Colors.black),
+            BottomNavigationBarItem(icon: Icon(Icons.two_k), label: 'Counter 2', backgroundColor: Colors.black),
+            BottomNavigationBarItem(icon: Icon(Icons.three_k), label: 'Counter 3', backgroundColor: Colors.black),
           ],
           type: BottomNavigationBarType.shifting,
           currentIndex: _selectedIndex,
-          selectedItemColor: Colors.white,
+          selectedItemColor: Colors.blue,
           iconSize: 40,
           onTap: _onItemTapped,
-          elevation: 5
-      ),
+          elevation: 5),
     );
   }
 }
-
