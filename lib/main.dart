@@ -1,5 +1,5 @@
-import 'package:counter_agenda_boa/CounterTwoScreen.dart';
-import 'package:counter_agenda_boa/CounterthreeScreen.dart';
+import 'package:counter_agenda_boa/counter_two_screen.dart';
+import 'package:counter_agenda_boa/counter_three_screen.dart';
 import 'package:counter_agenda_boa/FirebaseServices/firebase.dart';
 import 'package:counter_agenda_boa/Model/CounterModel.dart';
 import 'package:counter_agenda_boa/Provider/counterProviderOne.dart';
@@ -8,7 +8,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import 'CounterOneScreen.dart';
+import 'counter_one_screen.dart';
 import 'Provider/counterProviderTwo.dart';
 
 void main() async{
@@ -34,16 +34,15 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       debugShowCheckedModeBanner: false,
-
       home: MyNavigationBar(),
     );
   }
 }
 
 class MyNavigationBar extends StatefulWidget {
-  MyNavigationBar ({Key? key}) : super(key: key);
+  const MyNavigationBar ({Key? key}) : super(key: key);
 
   @override
   _MyNavigationBarState createState() => _MyNavigationBarState();
@@ -55,9 +54,9 @@ class _MyNavigationBarState extends State<MyNavigationBar > {
   int selectedPage = 0;
 
   final _pageOptions = [
-    CounterOneScreen(),
-    CounterTwoScreen(),
-    CounterthreeScreen()
+    const CounterOneScreen(),
+    const CounterTwoScreen(),
+    const CounterThreeScreen()
   ];
   void _onItemTapped(int index) {
     setState(() {
@@ -76,10 +75,11 @@ void initState() {
     return Scaffold(
       appBar: AppBar(
           title: const Text('Counter Agenda Boa'),
-          backgroundColor: Colors.pink
+          backgroundColor: Colors.black
       ),
       body: _pageOptions[_selectedIndex],
       floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.black,
         onPressed: (){
         FirebaseServices.refreshAllCounter(0);
         context.read(provider.notifier).refresh();
@@ -88,14 +88,14 @@ void initState() {
 
         },
         tooltip: 'Increment',
-        child: const Icon(Icons.add),
+        child: const Icon(Icons.delete_forever),
       ),
       bottomNavigationBar: BottomNavigationBar(
           items: const <BottomNavigationBarItem>[
             BottomNavigationBarItem(
                 icon: Icon(Icons.countertops),
                 title: Text('Counter 1'),
-                backgroundColor: Colors.pink
+                backgroundColor: Colors.black
             ),
             BottomNavigationBarItem(
                 icon: Icon(Icons.countertops_outlined),
